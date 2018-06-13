@@ -50,25 +50,33 @@
 			var clock = new THREE.Clock();
 			var textureLoader = new THREE.TextureLoader(); // 使用一张法向图来表示纹理图片某个点的法向量
 
-			var earth, moon;
+			var earth, moon, moon1;
 
 			init();
 			animate();
 
 			function init() {
 
-				var EARTH_RADIUS = 1;
-				var MOON_RADIUS = 0.27;
-				var MOON1_RADIUS = 0.7;
+				// 星球大小
+				var SUN_RADIUS = 5;
+				var EARTH_RADIUS = 1.5;
+				var MOON_RADIUS = 0.8;
+				var Mercury_RADIUS = 0.5;
+				var VENUS_RADIUS = 0.8;
+				var Mars_RADIUS = 1;
+				var Jupiter_RADIUS = 3;
+				var Saturn_RADIUS = 2.6;
+				var Uranus_RADIUS = 2;
+				var Neptune_RADIUS = 2;
 
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
-				camera.position.set( 10, 5, 20 );
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera.position.set( 60, 60, 110 );
 
 				controls = new THREE.OrbitControls( camera ); // 加载轨道控制器
 
 				scene = new THREE.Scene();
 
-				scene2 = new THREE.Scene();
+				// scene2 = new THREE.Scene();
 
 				// dirLight = new THREE.AmbientLight( 0xffffff ); // 环境光
 				dirLight = new THREE.DirectionalLight( 0xffffff ); // 以特定方向发射的光
@@ -79,38 +87,147 @@
 				// scene.add( axesHelper );
 
 				//
-
-				var earthGeometry = new THREE.SphereBufferGeometry( EARTH_RADIUS, 16, 16 ); // 球体
-				var earthMaterial = new THREE.MeshPhongMaterial( {
+				// 太阳
+				var sunGeometry = new THREE.SphereBufferGeometry( SUN_RADIUS, 16, 16 ); // 球体
+				var sunMaterial = new THREE.MeshPhongMaterial( {
 					specular: 0x333333,
 					shininess: 5,
+					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/%E5%A4%AA%E9%98%B3.jpg' ), // 设置颜色纹理贴图
+				} );
+				sun = new THREE.Mesh( sunGeometry, sunMaterial );
+				scene.add( sun );
+
+				// 月亮
+				// var moonGeometry = new THREE.SphereBufferGeometry( MOON_RADIUS, 16, 16 );
+				// var moonMaterial = new THREE.MeshPhongMaterial( {
+				// 	shininess: 5, // 亮度
+				// 	map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/moon_1024.jpg' )
+				// } );
+				// moon = new THREE.Mesh( moonGeometry, moonMaterial );
+				// scene.add( moon );
+				
+				// 水星
+				var MercuryGeometry = new THREE.SphereBufferGeometry( Mercury_RADIUS, 16, 16 );
+				var MercuryMaterial = new THREE.MeshPhongMaterial( {
+					shininess: 5, // 亮度
+					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/three/%E6%B0%B4%E6%98%9F.jpg' )
+				} );
+				Mercury = new THREE.Mesh( MercuryGeometry, MercuryMaterial );
+				scene.add( Mercury );
+
+				// 金星venus
+				var venusGeometry = new THREE.SphereBufferGeometry( VENUS_RADIUS, 16, 16 );
+				var venusMaterial = new THREE.MeshPhongMaterial( {
+					shininess: 5, // 亮度
+					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/three/%E9%87%91%E6%98%9F.jpg' )
+				} );
+				venus = new THREE.Mesh( venusGeometry, venusMaterial );
+				scene.add( venus );
+
+				// 地球
+				var earthGeometry = new THREE.SphereBufferGeometry( EARTH_RADIUS, 16, 16 );	
+				var earthMaterial = new THREE.MeshPhongMaterial( {	
+					specular: 0x333333,
+					shininess: 5, // 亮度
 					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/earth_atmos_2048.jpg' ), // 设置颜色纹理贴图
 					specularMap: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/earth_specular_2048.jpg' ), // 材料的高亮色
 					normalMap: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/earth_normal_2048.jpg' ),  // 法线贴图对材料有多大影响
-					normalScale: new THREE.Vector2( 0.85, 0.85 ) // 法线贴图对材料有多大影响， 默认是1， 范围是0-1
 				} );
 				earth = new THREE.Mesh( earthGeometry, earthMaterial );
 				scene.add( earth );
 
-				var moonGeometry = new THREE.SphereBufferGeometry( MOON_RADIUS, 16, 16 );
-				var moonMaterial = new THREE.MeshPhongMaterial( {
+				// 火星Mars
+				var MarsGeometry = new THREE.SphereBufferGeometry( Mars_RADIUS, 16, 16 );
+				var MarsMaterial = new THREE.MeshPhongMaterial( {
 					shininess: 5, // 亮度
-					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/moon_1024.jpg' )
+					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/three/%E7%81%AB%E6%98%9F.jpg' )
 				} );
-				moon = new THREE.Mesh( moonGeometry, moonMaterial );
-				scene.add( moon );
+				Mars = new THREE.Mesh( MarsGeometry, MarsMaterial );
+				scene.add( Mars );
 
-				var moon1Geometry = new THREE.SphereBufferGeometry( MOON1_RADIUS, 16, 16 );
-				var moon1Material = new THREE.MeshPhongMaterial( {
+				// 木星Jupiter
+				var JupiterGeometry = new THREE.SphereBufferGeometry( Jupiter_RADIUS, 16, 16 );
+				var JupiterMaterial = new THREE.MeshPhongMaterial( {
 					shininess: 5, // 亮度
-					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/moon_1024.jpg' )
+					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/three/%E6%9C%A8%E6%98%9F.jpg' )
 				} );
-				moon1 = new THREE.Mesh( moonGeometry, moonMaterial );
-				scene.add( moon1 );
+				Jupiter = new THREE.Mesh( JupiterGeometry, JupiterMaterial );
+				scene.add( Jupiter );
+
+				// 土星
+				var SaturnGeometry = new THREE.SphereBufferGeometry( Saturn_RADIUS, 16, 16 );
+				var SaturnMaterial = new THREE.MeshPhongMaterial( {
+					shininess: 5, // 亮度
+					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/three/%E5%9C%9F%E6%98%9F.jpg' )
+				} );
+				Saturn = new THREE.Mesh( SaturnGeometry, SaturnMaterial );
+				scene.add( Saturn );
+
+				// 天王星
+				var UranusGeometry = new THREE.SphereBufferGeometry( Uranus_RADIUS, 16, 16 );
+				var UranusMaterial = new THREE.MeshPhongMaterial( {
+					shininess: 5, // 亮度
+					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/three/%E5%A4%A9%E7%8E%8B%E6%98%9F.jpg' )
+				} );
+				Uranus = new THREE.Mesh( UranusGeometry, UranusMaterial );
+				scene.add( Uranus );
+
+				// 海王星Neptune
+				var NeptuneGeometry = new THREE.SphereBufferGeometry( Neptune_RADIUS, 16, 16 );
+				var NeptuneMaterial = new THREE.MeshPhongMaterial( {
+					shininess: 5, // 亮度
+					map: textureLoader.load( 'http://pa7o8k199.bkt.clouddn.com/lzy/three/%E6%B5%B7%E7%8E%8B%E6%98%9F.jpg' )
+				} );
+				Neptune = new THREE.Mesh( NeptuneGeometry, NeptuneMaterial );
+				scene.add( Neptune );
 
 
-				//
+				// 背景星点
+				
+				var starsGeometry = new THREE.Geometry();
+				for (var i = 0; i < 2000; i ++) {
+					var starVector = new THREE.Vector3(
+						THREE.Math.randFloatSpread(2000), // 设置x, y, z随机位置
+						THREE.Math.randFloatSpread(2000),
+						THREE.Math.randFloatSpread(2000)
+					);
+					starsGeometry.vertices.push(starVector);
+				}
+				var starsMaterial = new THREE.PointsMaterial({color: 0x888888}) // 设置材质的颜色
+				var starsPoint = new THREE.Points(starsGeometry, starsMaterial);
+				scene.add(starsPoint);
 
+
+				// 绘制星球
+
+				// 太阳
+				var sunDiv = document.createElement( 'div' );
+				sunDiv.className = 'label';
+				sunDiv.textContent = '';	
+				sunDiv.style.marginTop = '-1em';
+				var sunLabel = new THREE.CSS2DObject( sunDiv );
+				sunLabel.position.set( 0, SUN_RADIUS, 0 );
+				sun.add( sunLabel );
+
+				// 水星
+				var MercuryDiv = document.createElement( 'div' );
+				MercuryDiv.className = 'label';
+				MercuryDiv.textContent = 'Mercury';
+				MercuryDiv.style.marginTop = '-1em';
+				var MercuryLabel = new THREE.CSS2DObject( MercuryDiv );
+				MercuryLabel.position.set( 0, Mercury_RADIUS, 0 );
+				Mercury.add( MercuryLabel );
+
+				// 金星
+				var venusDiv = document.createElement( 'div' );
+				venusDiv.className = 'label';
+				venusDiv.textContent = 'venus';
+				venusDiv.style.marginTop = '-1em';
+				var venusLabel = new THREE.CSS2DObject( venusDiv );
+				venusLabel.position.set( 0, VENUS_RADIUS, 0 );
+				venus.add( venusLabel );
+
+				// 地球
 				var earthDiv = document.createElement( 'div' );
 				earthDiv.className = 'label';
 				earthDiv.textContent = 'Earth';
@@ -119,21 +236,64 @@
 				earthLabel.position.set( 0, EARTH_RADIUS, 0 );
 				earth.add( earthLabel );
 
-				var moonDiv = document.createElement( 'div' );
-				moonDiv.className = 'label';
-				moonDiv.textContent = 'Moon';
-				moonDiv.style.marginTop = '-1em';
-				var moonLabel = new THREE.CSS2DObject( moonDiv );
-				moonLabel.position.set( 0, MOON_RADIUS, 0 );
-				moon.add( moonLabel );
+				// 火星
+				var MarsDiv = document.createElement( 'div' );
+				MarsDiv.className = 'label';
+				MarsDiv.textContent = 'Mars';
+				MarsDiv.style.marginTop = '-1em';
+				var MarsLabel = new THREE.CSS2DObject( MarsDiv ); // ??
+				MarsLabel.position.set( 0, Mars_RADIUS, 0 );
+				Mars.add( MarsLabel );
 
-				var moon1Div = document.createElement( 'div' );
-				moon1Div.className = 'label';
-				moon1Div.textContent = 'Moon1';
-				moon1Div.style.marginTop = '-1em';
-				var moon1Label = new THREE.CSS2DObject( moon1Div );
-				moon1Label.position.set( 0, MOON1_RADIUS, 0 );
-				moon.add( moon1Label );
+				// 木星Jupiter
+				var JupiterDiv = document.createElement( 'div' );
+				JupiterDiv.className = 'label';
+				JupiterDiv.textContent = 'Jupiter';
+				JupiterDiv.style.marginTop = '-1em';
+				var JupiterLabel = new THREE.CSS2DObject( JupiterDiv ); // ??
+				JupiterLabel.position.set( 0, Jupiter_RADIUS, 0 );
+				Jupiter.add( JupiterLabel );
+
+				// 土星Saturn
+				var SaturnDiv = document.createElement( 'div' );
+				SaturnDiv.className = 'label';
+				SaturnDiv.textContent = 'Saturn';
+				SaturnDiv.style.marginTop = '-1em';
+				var SaturnLabel = new THREE.CSS2DObject( SaturnDiv ); // ??
+				SaturnLabel.position.set( 0, Saturn_RADIUS, 0 );
+				Saturn.add( SaturnLabel );
+
+				// 天王星Uranus
+				var UranusDiv = document.createElement( 'div' );
+				UranusDiv.className = 'label';
+				UranusDiv.textContent = 'Uranus';
+				UranusDiv.style.marginTop = '-1em';
+				var UranusLabel = new THREE.CSS2DObject( UranusDiv ); // ??
+				UranusLabel.position.set( 0, Uranus_RADIUS, 0 );
+				Uranus.add( UranusLabel );
+
+				// 海王星Neptune
+				var NeptuneDiv = document.createElement( 'div' );
+				NeptuneDiv.className = 'label';
+				NeptuneDiv.textContent = 'Neptune';
+				NeptuneDiv.style.marginTop = '-1em';
+				var NeptuneLabel = new THREE.CSS2DObject( NeptuneDiv ); // ??
+				NeptuneLabel.position.set( 0, Neptune_RADIUS, 0 );
+				Neptune.add( NeptuneLabel );
+
+
+				// 月球
+				// var moonDiv = document.createElement( 'div' );
+				// moonDiv.className = 'label';
+				// moonDiv.textContent = 'Moon';
+				// moonDiv.style.marginTop = '-1em';
+				// var moonLabel = new THREE.CSS2DObject( moonDiv );
+				// moonLabel.position.set( 0, MOON_RADIUS, 0 );
+				// moon.add( moonLabel );
+
+				// 
+
+
 				//
 
 				renderer = new THREE.WebGLRenderer();
@@ -148,15 +308,34 @@
 				document.body.appendChild( labelRenderer.domElement );
 
 			}
+
 			function animate() {
 
 				requestAnimationFrame( animate );
 
 				var elapsed = clock.getElapsedTime(); // 记录当前时间距离上一次记录时间截.以毫秒为单位
 				// console.log(elapsed)
-				earth.rotation.y += 0.004;
-				moon.position.set( Math.sin( elapsed ) * 5, 0, Math.cos( elapsed ) * 5 ); // 计算旋转
-				moon1.position.set( Math.sin( elapsed ) * 5, 1, Math.cos( elapsed+1 ) * 5 ); 
+				sun.rotation.y += 0.004;
+				// moon.rotation.y += 0.002;
+				earth.rotation.y += 0.003;
+				Mercury.rotation.y += 0.006;
+				venus.rotation.y += 0.005;
+				Mars.rotation.y += 0.005;
+				Jupiter.rotation.y += 0.005;
+				Saturn.rotation.y += 0.005;
+				Uranus.rotation.y += 0.005;
+				Neptune.rotation.y += 0.005;
+
+				sun.position.set(0, 10, 0);
+				Mercury.position.set( Math.sin( elapsed*0.6 ) * 10, 10, Math.cos( elapsed*0.6 ) * 10 );// 计算旋转 cos sin 同数据可以构成圆的轨迹
+				venus.position.set( Math.sin( elapsed*0.35 ) * 20, 10, Math.cos( elapsed*0.35 ) * 20 );
+				earth.position.set( Math.sin( elapsed*0.25 ) * 28, 10, Math.cos( elapsed*0.25 ) * 28 ); 
+				Mars.position.set( Math.sin( elapsed*0.2 ) * 39, 10, Math.cos( elapsed*0.2 ) * 39 ); 
+				Jupiter.position.set( Math.sin( elapsed*0.15 ) * 45, 10, Math.cos( elapsed*0.15 ) * 45 ); 
+				Saturn.position.set( Math.sin( elapsed*0.1 ) * 55, 10, Math.cos( elapsed*0.1 ) * 55 ); 
+				Uranus.position.set( Math.sin( elapsed*0.09 ) * 60, 10, Math.cos( elapsed*0.09 ) * 60 ); 
+				Neptune.position.set( Math.sin( elapsed*0.06 ) * 65, 10, Math.cos( elapsed*0.06 ) * 65 ); 
+				// moon.position.set( Math.sin( elapsed*0.9 ) * 5, 0, Math.cos( elapsed*0.9 ) * 5 ); 
 
 				renderer.render( scene, camera );
 				labelRenderer.render( scene, camera );
